@@ -1,14 +1,45 @@
-import React from 'react';
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import { Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import './App.css'
 
-function App() {
+// function App() {
+//   const [count, setCount] = useState(0)
+
+//   return (
+//     <>
+//       <div>
+//         <a href="https://vite.dev" target="_blank">
+//           <img src={viteLogo} className="logo" alt="Vite logo" />
+//         </a>
+//         <a href="https://react.dev" target="_blank">
+//           <img src={reactLogo} className="logo react" alt="React logo" />
+//         </a>
+//       </div>
+//       <h1>Vite + React</h1>
+//       <div className="card">
+//         <button onClick={() => setCount((count) => count + 1)}>
+//           count is {count}
+//         </button>
+//         <p>
+//           Edit <code>src/App.jsx</code> and save to test HMR
+//         </p>
+//       </div>
+//       <p className="read-the-docs">
+//         Click on the Vite and React logos to learn more
+//       </p>
+//     </>
+//   )
+// }
+
+export default function App() {
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-900 text-white">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-2">DevLedger</h1>
-        <p className="text-lg text-gray-300">Team dashboard loading...</p>
-      </div>
+    <div className="min-h-screen bg-yellow-100 flex items-center justify-center">
+      <h1 className="text-4xl font-bold text-yellow-700">
+        Tailwind is working ✅
+      </h1>
     </div>
   );
 }
-
-export default App;
