@@ -1,19 +1,23 @@
-# DevLedger 🗂️
+# DevLedger - Team Dashboard Backend (WIP)
 
-**DevLedger** is a team-focused project dashboard that helps developers and teams track their progress, assign tasks, and get weekly summaries.
+DevLedger is a team dashboard to simplify project tracking, collaboration, and weekly updates.
 
-## 🚀 Tech Stack
-- React.js
-- TailwindCSS
-- Vite
+## Features (In Progress)
+- User registration and login (with JWT auth)
+- Role-based access control
+- Task & project APIs
+- Weekly email summaries (via Nodemailer)
 
-## 📌 Features (Planned)
-- Team registration & login
-- Task assignments
-- Weekly summaries
-- Realtime status updates
+## Tech Stack
+Node.js, Express.js, MongoDB, Mongoose, JWT, bcrypt, Nodemailer
 
-## 🔗 Live Preview
-(coming soon)
+## Status
+- ✅ Auth & access control base implemented
+- 🔄 Task/project logic under development
+- 🚀 Frontend and UI coming soon
 
-> Currently building the frontend. Backend coming next.
+## Setup
+1. Clone the repo
+2. Run `npm install`
+3. Create `.env` file based on `.env.example`
+4. Run `npm start`
