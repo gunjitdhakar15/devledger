@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 
 const saltRounds = 10; // making hashing complex using bcrypt
 
-
 //registers a new user and hashes password
 // POST /Register 
 async function registerUser(req, res) {
@@ -66,6 +65,7 @@ async function loginUser(req, res) {
 
         res.json({token});
     }
+    
     catch(err){
         console.error(err);
         res.status(500).json({ error: `Server error`});
