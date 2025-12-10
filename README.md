@@ -2,6 +2,8 @@
 
 DevLedger is a team dashboard for project tracking, role-based collaboration, and automated summaries.
 
+Current Status: Under active development. 
+
 ## How to Use
 1. Clone the repo
 2. Run `npm install`
