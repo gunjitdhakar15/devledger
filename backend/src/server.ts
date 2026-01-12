@@ -15,23 +15,18 @@
  * - Tests import app.ts; Production runs server.ts
  */
 
+// Imports -> App builder and env config
 import { buildApp } from './app.js';
 import { env } from './config/env.js';
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// MAIN FUNCTION
-// ═══════════════════════════════════════════════════════════════════════════════
-
+// MAIN FUNCTION "async because we have to wait for DB to connect"
 async function main(): Promise<void> {
-    // ─────────────────────────────────────────────────────────────────────────────
-    // BUILD THE APPLICATION
-    // ─────────────────────────────────────────────────────────────────────────────
+    // BUILD THE APPLICATION (Promise<void> -> typescript syntax for promise that this function will return nothing and will be complete eventually)
+    // 1.bulid the app ( Plugins, routes, etc)
     const app = await buildApp();
-
-    // ─────────────────────────────────────────────────────────────────────────────
-    // START LISTENING
-    // ─────────────────────────────────────────────────────────────────────────────
+    
     try {
+        // 2.Start listening for request on the PORT from env
         await app.listen({
             port: env.PORT,
             host: env.HOST,           // '0.0.0.0' allows external connections
@@ -47,10 +42,10 @@ async function main(): Promise<void> {
 ║   ██████╔╝███████╗ ╚████╔╝ ███████╗███████╗██████╔╝╚██████╔╝███████╗██║  ██║  ║
 ║   ╚═════╝ ╚══════╝  ╚═══╝  ╚══════╝╚══════╝╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝  ║
 ║                                                                               ║
-║   🚀 High-Performance Project Management Dashboard                           ║
-║   📍 Server: http://${env.HOST}:${env.PORT}                                            ║
-║   🔧 Environment: ${env.NODE_ENV.padEnd(12)}                                         ║
-║   📋 API Docs: http://${env.HOST}:${env.PORT}/docs                                     ║
+║   🚀 High-Performance Project Management Dashboard                            ║
+║   📍 Server: http://${env.HOST}:${env.PORT}                                   ║
+║   🔧 Environment: ${env.NODE_ENV.padEnd(12)}                                  ║
+║   📋 API Docs: http://${env.HOST}:${env.PORT}/docs                            ║
 ║                                                                               ║
 ║   Operator Mode: ACTIVE                                                       ║
 ║                                                                               ║
@@ -116,7 +111,5 @@ async function main(): Promise<void> {
     });
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// RUN THE SERVER
-// ═══════════════════════════════════════════════════════════════════════════════
+// Run the Server
 main();
