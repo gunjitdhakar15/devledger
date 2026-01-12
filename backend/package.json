@@ -1,19 +1,43 @@
 {
-  "name": "Devledger",
-  "version": "1.2.0",
-  "main": "app.js",
-  "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
-  },
-  "dependencies": {
-    "bcrypt": "^6.0.0",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "pg": "^8.16.3"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.11"
-  }
+    "name": "devledger-backend",
+    "version": "1.0.0",
+    "description": "High-Performance Project Management Dashboard - Production-Grade Backend",
+    "main": "dist/server.js",
+    "type": "module",
+    "scripts": {
+        "dev": "tsx watch src/server.ts",
+        "build": "tsc",
+        "start": "node dist/server.js",
+        "lint": "eslint src --ext .ts",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "test:watch": "vitest"
+    },
+    "dependencies": {
+        "fastify": "^5.3.3",
+        "@fastify/jwt": "^9.1.0",
+        "@fastify/cookie": "^11.0.2",
+        "@fastify/cors": "^10.1.0",
+        "@fastify/helmet": "^13.0.1",
+        "@fastify/rate-limit": "^10.2.2",
+        "mongoose": "^8.15.2",
+        "zod": "^3.25.51",
+        "bcrypt": "^6.0.0",
+        "deep-diff": "^1.0.2",
+        "fastify-plugin": "^5.0.1"
+    },
+    "devDependencies": {
+        "@types/node": "^22.15.32",
+        "@types/bcrypt": "^5.0.2",
+        "@types/deep-diff": "^1.0.5",
+        "typescript": "^5.8.3",
+        "tsx": "^4.20.3",
+        "vitest": "^3.2.4",
+        "@typescript-eslint/eslint-plugin": "^8.35.1",
+        "@typescript-eslint/parser": "^8.35.1",
+        "eslint": "^9.29.0"
+    },
+    "engines": {
+        "node": ">=20.0.0"
+    }
 }

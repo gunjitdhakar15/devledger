@@ -1,0 +1,45 @@
+{
+    "compilerOptions": {
+        // ═══════════════════════════════════════════════════════════════════════════
+        // MODULE SYSTEM CONFIGURATION
+        // ═══════════════════════════════════════════════════════════════════════════
+        "target": "ES2022", // Compile to modern ES2022 (supports top-level await)
+        "module": "NodeNext", // Use Node.js native ES modules
+        "moduleResolution": "NodeNext", // Resolves imports the same way Node.js does
+        // ═══════════════════════════════════════════════════════════════════════════
+        // STRICTNESS - Maximum Type Safety (The "Senior Architect" Standard)
+        // ═══════════════════════════════════════════════════════════════════════════
+        "strict": true, // Enable ALL strict type checking options
+        "noImplicitAny": true, // Error on expressions with 'any' type
+        "strictNullChecks": true, // null and undefined are distinct types
+        "strictFunctionTypes": true, // Strict function parameter checking
+        "noUnusedLocals": true, // Report errors on unused local variables
+        "noUnusedParameters": true, // Report errors on unused parameters
+        "noImplicitReturns": true, // Report error when not all code paths return
+        "noFallthroughCasesInSwitch": true, // Report errors for fallthrough in switch
+        "forceConsistentCasingInFileNames": true, // Enforce consistent file naming
+        // ═══════════════════════════════════════════════════════════════════════════
+        // OUTPUT CONFIGURATION
+        // ═══════════════════════════════════════════════════════════════════════════
+        "outDir": "./dist", // Output compiled JS to dist/
+        "rootDir": "./src", // Source files are in src/
+        "declaration": true, // Generate .d.ts type declaration files
+        "declarationMap": true, // Generate sourcemaps for declarations
+        "sourceMap": true, // Generate sourcemaps for debugging
+        // ═══════════════════════════════════════════════════════════════════════════
+        // INTEROP & HELPERS
+        // ═══════════════════════════════════════════════════════════════════════════
+        "esModuleInterop": true, // Enables default imports from CommonJS modules
+        "allowSyntheticDefaultImports": true, // Allow default import for modules with no default
+        "skipLibCheck": true, // Skip type checking of declaration files (faster)
+        "resolveJsonModule": true // Allow importing JSON files as modules
+    },
+    "include": [
+        "src/**/*"
+    ], // Include all files in src/
+    "exclude": [
+        "node_modules",
+        "dist",
+        "test"
+    ] // Exclude build artifacts & tests
+}
