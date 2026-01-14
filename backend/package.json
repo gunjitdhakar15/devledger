@@ -11,7 +11,11 @@
         "lint": "eslint src --ext .ts",
         "typecheck": "tsc --noEmit",
         "test": "vitest run",
-        "test:watch": "vitest"
+        "test:watch": "vitest",
+        "db:seed": "tsx src/scripts/seed.ts",
+        "db:seed:clean": "tsx src/scripts/seed.ts --clean",
+        "db:status": "tsx src/scripts/db-utils.ts status",
+        "db:reset": "tsx src/scripts/db-utils.ts reset"
     },
     "dependencies": {
         "fastify": "^5.3.3",
