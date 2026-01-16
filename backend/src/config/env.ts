@@ -50,7 +50,7 @@ const envSchema = z.object({
         .min(32, { message: 'JWT_SECRET must be at least 32 characters for security' }),
 
     JWT_ACCESS_EXPIRY: z.string()
-        .default('15m'),                            // Access tokens expire fast (15 mins)
+        .default('25m'),                            // Access tokens expire fast (15 mins)
 
     JWT_REFRESH_EXPIRY: z.string()
         .default('7d'),                             // Refresh tokens last 7 days
