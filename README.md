@@ -24,7 +24,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/devledger.git
+git clone https://github.com/gunjitdhakar15/devledger.git
 cd devledger
 
 # Install backend dependencies
