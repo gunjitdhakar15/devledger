@@ -121,21 +121,7 @@ async function authPlugin(fastify: FastifyInstance) {
     fastify.log.info('🔐 Authentication plugin registered');
 }
 
-fastify.decorate('authenticate', async function (
-        request: FastifyRequest,
-        _reply: FastifyReply
-    ) {
-        try {
-            // jwtVerify() extracts token from Authorization header, verifies it,
-            // and attaches the decoded payload to request.user
-            await request.jwtVerify();
-        } catch (err) {
-            throw new UnauthorizedError('Invalid or expired token');
-        }
-    });
 
-    fastify.log.info('🔐 Authentication plugin registered');
-}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // EXPORT
