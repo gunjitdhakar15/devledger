@@ -82,7 +82,7 @@ export default function Projects() {
                     <p className="text-slate-500 dark:text-slate-400 mt-1">Manage and track your project progress</p>
                 </div>
                 <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-medium shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-200">
-                    + New Project
+                    + Create Project
                 </button>
             </div>
 
