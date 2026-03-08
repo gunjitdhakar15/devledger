@@ -2,6 +2,12 @@
 
 **High-Performance Project Management Dashboard** - Modern team collaboration with real-time analytics, task tracking, and role-based access control.
 
+### ✨ Features
+- **Real-time Collaboration**: Instant updates across all clients
+- **Role-based Access Control**: Granular permissions for Admin, Manager, and Developer roles
+- **Task & Project Management**: Organize work efficiently with drag-and-drop support
+- **Rich Analytics**: Dashboard statistics and progress tracking
+
 ![Status](https://img.shields.io/badge/status-under%20development-yellow)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
