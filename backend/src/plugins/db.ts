@@ -50,6 +50,15 @@ async function dbPlugin(fastify: FastifyInstance) {
         // ─────────────────────────────────────────────────────────────────────────
         // CONNECT TO MONGODB
         // ─────────────────────────────────────────────────────────────────────────
+        // Add listeners for runtime connection events
+        mongoose.connection.on('error', (err) => {
+            fastify.log.error({ err }, 'MongoDB connection error');
+        });
+
+        mongoose.connection.on('disconnected', () => {
+            fastify.log.warn('MongoDB disconnected');
+        });
+
         await mongoose.connect(env.MONGODB_URI, {
             // Connection options
             maxPoolSize: 10,            // Maximum connections in the pool
