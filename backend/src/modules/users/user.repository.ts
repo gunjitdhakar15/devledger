@@ -292,19 +292,19 @@ export class UserRepository {
      * Convert Mongoose document to DTO
      */
     private toDTO(user: IUserDocument): UserDTO {
-        const obj = user.toJSON();
+        const obj = user.toJSON() as Record<string, unknown>;
         return {
-            id: obj.id,
-            email: obj.email,
-            username: obj.username,
-            role: obj.role,
-            firstName: obj.firstName || null,
-            lastName: obj.lastName || null,
-            avatar: obj.avatar || null,
-            isActive: obj.isActive,
-            lastLoginAt: obj.lastLoginAt || null,
-            createdAt: obj.createdAt,
-            updatedAt: obj.updatedAt,
+            id: String(obj.id),
+            email: String(obj.email),
+            username: String(obj.username),
+            role: String(obj.role),
+            firstName: (obj.firstName as string | null) || null,
+            lastName: (obj.lastName as string | null) || null,
+            avatar: (obj.avatar as string | null) || null,
+            isActive: Boolean(obj.isActive),
+            lastLoginAt: (obj.lastLoginAt as Date | null) || null,
+            createdAt: obj.createdAt as Date,
+            updatedAt: obj.updatedAt as Date,
         };
     }
 

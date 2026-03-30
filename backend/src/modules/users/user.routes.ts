@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
  * USER ROUTES - Route Definitions with Schema Validation

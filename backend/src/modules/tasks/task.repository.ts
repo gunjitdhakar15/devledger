@@ -210,7 +210,7 @@ export class TaskRepository {
         // Handle status change → completedAt
         if (data.status === 'DONE') {
             updateData.completedAt = new Date();
-        } else if (data.status && data.status !== 'DONE') {
+        } else if (data.status) {
             updateData.completedAt = null;
         }
 

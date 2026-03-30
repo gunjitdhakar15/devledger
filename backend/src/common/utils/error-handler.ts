@@ -121,7 +121,7 @@ export async function errorHandler(
     // ─────────────────────────────────────────────────────────────────────────────
     // CASE 5: Duplicate Key Error (MongoDB unique constraint)
     // ─────────────────────────────────────────────────────────────────────────────
-    if ('code' in error && error.code === 11000) {
+    if ('code' in error && Number(error.code) === 11000) {
         const response: ErrorResponse = {
             success: false,
             error: {
