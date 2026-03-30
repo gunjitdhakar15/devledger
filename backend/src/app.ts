@@ -20,6 +20,7 @@ import Fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
+import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 
 import { env } from './config/env.js';
 
@@ -70,6 +71,10 @@ export async function buildApp(): Promise<FastifyInstance> {
             return req.headers['x-request-id'] as string || crypto.randomUUID();
         },
     });
+
+    // Let Fastify validate and serialize the Zod schemas used across the routes.
+    app.setValidatorCompiler(validatorCompiler);
+    app.setSerializerCompiler(serializerCompiler);
 
     // ─────────────────────────────────────────────────────────────────────────────
     // SECURITY PLUGINS

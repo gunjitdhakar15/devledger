@@ -1,80 +1,180 @@
+import { useEffect, useState } from "react";
+import { loadDashboardSnapshot } from "../lib/data";
 import { cn } from "../lib/utils";
-
-const stats = [
-    { name: "Total Projects", value: "12", change: "+2", changeType: "positive", icon: "📁" },
-    { name: "Active Tasks", value: "48", change: "+8", changeType: "positive", icon: "✅" },
-    { name: "Completed", value: "156", change: "+23", changeType: "positive", icon: "🎉" },
-    { name: "Team Members", value: "8", change: "0", changeType: "neutral", icon: "👥" },
-];
-
-const recentActivity = [
-    { id: 1, action: "Created new project", project: "API Gateway", time: "2 hours ago", user: "John" },
-    { id: 2, action: "Completed task", project: "User Auth", time: "4 hours ago", user: "Sarah" },
-    { id: 3, action: "Added comment", project: "Dashboard UI", time: "5 hours ago", user: "Mike" },
-    { id: 4, action: "Updated status", project: "Database Migration", time: "1 day ago", user: "Emily" },
-];
+import type { DashboardSnapshot } from "../lib/types";
 
 export default function Dashboard() {
+    const [snapshot, setSnapshot] = useState<DashboardSnapshot | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const load = async () => {
+            setIsLoading(true);
+            const next = await loadDashboardSnapshot();
+
+            if (!cancelled) {
+                setSnapshot(next);
+                setIsLoading(false);
+            }
+        };
+
+        void load();
+
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
+    if (isLoading || !snapshot) {
+        return (
+            <div className="space-y-6">
+                <div className="animate-pulse rounded-[28px] border border-white/70 bg-white/80 p-8">
+                    <div className="h-4 w-32 rounded-full bg-slate-200" />
+                    <div className="mt-4 h-10 w-72 rounded-full bg-slate-200" />
+                    <div className="mt-4 h-4 w-full max-w-2xl rounded-full bg-slate-100" />
+                </div>
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    {Array.from({ length: 4 }).map((_, index) => (
+                        <div key={index} className="animate-pulse rounded-[24px] border border-white/70 bg-white/80 p-6">
+                            <div className="h-10 w-10 rounded-2xl bg-slate-100" />
+                            <div className="mt-5 h-8 w-24 rounded-full bg-slate-200" />
+                            <div className="mt-3 h-4 w-36 rounded-full bg-slate-100" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="space-y-8">
-            {/* Header */}
-            <div>
-                <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Dashboard</h1>
-                <p className="text-slate-500 dark:text-slate-400 mt-1">Welcome back! Here's what's happening with your projects.</p>
-            </div>
+            <section className="rounded-[32px] border border-white/70 bg-white/80 p-8 shadow-xl shadow-cyan-950/5 backdrop-blur-xl">
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                    <div>
+                        <p className="text-sm font-semibold uppercase tracking-[0.32em] text-cyan-700">Dashboard</p>
+                        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900">
+                            {snapshot.user.name}, your delivery view is ready.
+                        </h1>
+                        <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
+                            DevLedger is currently running in <span className="font-semibold text-slate-900">{snapshot.mode}</span> mode.
+                            The dashboard keeps a clean portfolio presentation even when the backend is unavailable.
+                        </p>
+                    </div>
+                    <div className="rounded-3xl border border-cyan-100 bg-cyan-50/80 px-5 py-4 text-sm text-cyan-900">
+                        <p className="font-semibold">{snapshot.user.role}</p>
+                        <p className="mt-1 text-cyan-800">{snapshot.user.email}</p>
+                    </div>
+                </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {stats.map((stat) => (
+                {snapshot.note ? (
+                    <div className="mt-6 rounded-3xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm leading-6 text-amber-800">
+                        {snapshot.note}
+                    </div>
+                ) : null}
+            </section>
+
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                {snapshot.stats.map((stat) => (
                     <div
                         key={stat.name}
-                        className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-shadow duration-300"
+                        className="rounded-[24px] border border-white/70 bg-white/80 p-6 shadow-lg shadow-cyan-950/5 backdrop-blur-xl transition-transform duration-200 hover:-translate-y-1"
                     >
                         <div className="flex items-center justify-between">
                             <span className="text-3xl">{stat.icon}</span>
                             <span
                                 className={cn(
-                                    "text-xs font-medium px-2 py-1 rounded-full",
-                                    stat.changeType === "positive" && "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-                                    stat.changeType === "negative" && "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-                                    stat.changeType === "neutral" && "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400"
+                                    "rounded-full px-3 py-1 text-xs font-semibold",
+                                    stat.tone === "positive" && "bg-emerald-100 text-emerald-700",
+                                    stat.tone === "warning" && "bg-amber-100 text-amber-700",
+                                    stat.tone === "neutral" && "bg-slate-100 text-slate-600"
                                 )}
                             >
                                 {stat.change}
                             </span>
                         </div>
-                        <div className="mt-4">
-                            <p className="text-3xl font-bold text-slate-900 dark:text-white">{stat.value}</p>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{stat.name}</p>
-                        </div>
+                        <p className="mt-6 text-4xl font-semibold text-slate-900">{stat.value}</p>
+                        <p className="mt-2 text-sm font-medium text-slate-700">{stat.name}</p>
+                        <p className="mt-3 text-sm leading-6 text-slate-500">{stat.hint}</p>
                     </div>
                 ))}
             </div>
 
-            {/* Recent Activity */}
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
-                <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Recent Activity</h2>
-                </div>
-                <div className="divide-y divide-slate-200 dark:divide-slate-700">
-                    {recentActivity.map((activity) => (
-                        <div key={activity.id} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-medium text-sm">
-                                    {activity.user[0]}
+            <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+                <div className="rounded-[28px] border border-white/70 bg-white/80 p-6 shadow-lg shadow-cyan-950/5 backdrop-blur-xl">
+                    <div className="flex items-center justify-between gap-4">
+                        <div>
+                            <h2 className="text-xl font-semibold text-slate-900">Recent activity</h2>
+                            <p className="mt-1 text-sm text-slate-500">A quick view of the most recent task movement.</p>
+                        </div>
+                        <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
+                            {snapshot.recentActivity.length} updates
+                        </span>
+                    </div>
+
+                    <div className="mt-6 divide-y divide-slate-200">
+                        {snapshot.recentActivity.map((activity) => (
+                            <div key={activity.id} className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+                                <div className="flex items-center gap-4">
+                                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-700 text-sm font-semibold text-white">
+                                        {activity.user
+                                            .split(" ")
+                                            .map((part) => part[0])
+                                            .join("")
+                                            .slice(0, 2)}
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-slate-900">
+                                            <span className="font-semibold">{activity.user}</span> {activity.action}
+                                        </p>
+                                        <p className="mt-1 text-sm text-cyan-700">{activity.subject}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="text-sm font-medium text-slate-900 dark:text-white">
-                                        <span className="font-semibold">{activity.user}</span> {activity.action}
-                                    </p>
-                                    <p className="text-sm text-blue-600 dark:text-blue-400">{activity.project}</p>
+                                <span className="text-xs font-medium uppercase tracking-[0.2em] text-slate-400">
+                                    {activity.time}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="rounded-[28px] border border-white/70 bg-white/80 p-6 shadow-lg shadow-cyan-950/5 backdrop-blur-xl">
+                    <h2 className="text-xl font-semibold text-slate-900">Project pulse</h2>
+                    <p className="mt-1 text-sm text-slate-500">The most visible projects in the current session.</p>
+
+                    <div className="mt-6 space-y-4">
+                        {snapshot.projects.slice(0, 4).map((project) => (
+                            <div
+                                key={project.id}
+                                className="rounded-3xl border border-slate-100 bg-slate-50/90 p-4"
+                            >
+                                <div className="flex items-start justify-between gap-3">
+                                    <div>
+                                        <p className="font-semibold text-slate-900">{project.name}</p>
+                                        <p className="mt-1 text-sm leading-6 text-slate-500">{project.description}</p>
+                                    </div>
+                                    <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                        {project.status.replace("-", " ")}
+                                    </span>
+                                </div>
+
+                                <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200">
+                                    <div
+                                        className="h-full rounded-full"
+                                        style={{ width: `${project.progress}%`, background: project.color }}
+                                    />
+                                </div>
+
+                                <div className="mt-3 flex items-center justify-between text-sm text-slate-500">
+                                    <span>{project.completedTasks}/{project.tasksCount} tasks complete</span>
+                                    <span className="font-semibold text-slate-700">{project.progress}%</span>
                                 </div>
                             </div>
-                            <span className="text-xs text-slate-500 dark:text-slate-400">{activity.time}</span>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
-            </div>
+            </section>
         </div>
     );
 }

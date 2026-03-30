@@ -148,12 +148,13 @@ const taskSchema = new Schema<ITaskDocument, ITaskModel>({
     toJSON: {
         virtuals: true,
         transform: (_doc, ret) => {
-            ret.id = ret._id.toString();
-            ret.projectId = ret.project?.toString();
-            ret.creatorId = ret.creator?.toString();
-            delete ret._id;
-            delete ret.__v;
-            return ret;
+            const transformed = ret as unknown as Record<string, unknown>;
+            transformed.id = String(transformed._id);
+            transformed.projectId = String(transformed.project);
+            transformed.creatorId = String(transformed.creator);
+            delete transformed._id;
+            delete transformed.__v;
+            return transformed;
         },
     },
 

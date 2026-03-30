@@ -37,9 +37,16 @@ cd devledger
 cd backend
 npm install
 
-# Set up environment variables
+# Set up backend environment variables
 cp .env.example .env
 # Edit .env with your MongoDB connection string
+
+# Install frontend dependencies
+cd ../frontend
+npm install
+
+# Optional: set frontend API endpoint
+cp .env.example .env
 ```
 
 ### Environment Variables
@@ -57,13 +64,28 @@ FRONTEND_URL=http://localhost:5173
 ### Running the Application
 
 ```bash
-# Development mode (with hot reload)
+# Backend development mode
+cd backend
 npm run dev
 
-# Production build
+# Frontend development mode
+cd ../frontend
+npm run dev
+
+# Frontend production build
+cd frontend
+npm run build
+
+# Backend deploy/runtime check
+cd ../backend
 npm run build
 npm start
 ```
+
+### Frontend Modes
+
+- **Live mode**: Sign in with a seeded account and the UI will use the backend API at `VITE_API_URL`
+- **Demo mode**: The UI falls back to portfolio-safe demo data when no API session is available
 
 ## 🗄️ Database Management
 
@@ -101,6 +123,9 @@ After seeding, the database includes:
 
 ```
 devledger/
+├── docs/
+│   ├── runbooks/       # Deployment and production guides
+│   └── product/        # Feature and workflow documentation
 ├── backend/
 │   ├── src/
 │   │   ├── config/         # Environment & configuration
@@ -114,19 +139,33 @@ devledger/
 └── README.md
 ```
 
+## 📚 Documentation
+
+- [Documentation Index](./docs/README.md)
+- [Deployment Runbook](./docs/runbooks/deployment.md)
+- [Production Readiness Guide](./docs/runbooks/production-readiness.md)
+- [Feature Reference](./docs/product/features.md)
+- [Workflow Guide](./docs/product/workflows.md)
+
 ## 🔧 Available Scripts
 
 | Script | Description |
 |--------|-------------|
 | `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run start` | Run production build |
+| `npm run build` | Prepare the app for deployment |
+| `npm run start` | Run the backend with `tsx` |
 | `npm run lint` | Lint TypeScript files |
 | `npm run typecheck` | Type-check without emit |
 | `npm run test` | Run test suite |
 | `npm run db:seed` | Seed database |
 | `npm run db:status` | Check database status |
 | `npm run db:reset` | Reset database |
+
+## 🚢 Free Deployment Path
+
+- **Frontend**: Deploy `frontend/dist` to a static host such as Cloudflare Pages
+- **Backend**: Deploy the `backend` folder to a Node host and run `npm install && npm run build` as the build command, then `npm start`
+- **Database**: Use MongoDB Atlas free tier and set `MONGODB_URI`, `JWT_SECRET`, and `FRONTEND_URL` in your backend environment
 
 ## 📝 License
 

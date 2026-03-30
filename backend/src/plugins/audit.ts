@@ -205,7 +205,7 @@ async function auditPlugin(fastify: FastifyInstance) {
     // ─────────────────────────────────────────────────────────────────────────────
     // DECORATE REQUEST WITH AUDIT CONTEXT
     // ─────────────────────────────────────────────────────────────────────────────
-    fastify.decorateRequest('audit', null);
+    fastify.decorateRequest('audit', undefined);
 
     // ─────────────────────────────────────────────────────────────────────────────
     // ON REQUEST: Capture start time for duration calculation

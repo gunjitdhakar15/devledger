@@ -46,7 +46,6 @@ export interface IUser {
 export interface IUserDocument extends IUser, Document {
     // Instance methods
     comparePassword(candidatePassword: string): Promise<boolean>;
-    toJSON(): Record<string, unknown>;  // Override to hide passwordHash
 }
 
 /**
@@ -138,12 +137,13 @@ const userSchema = new Schema<IUserDocument, IUserModel>({
     toJSON: {
         virtuals: true,               // Include virtual properties
         transform: (_doc, ret) => {
-            ret.id = ret._id.toString();
-            delete ret._id;
-            delete ret.__v;
-            delete ret.passwordHash;    // NEVER expose password
-            delete ret.refreshTokenHash;
-            return ret;
+            const transformed = ret as unknown as Record<string, unknown>;
+            transformed.id = String(transformed._id);
+            delete transformed._id;
+            delete transformed.__v;
+            delete transformed.passwordHash;    // NEVER expose password
+            delete transformed.refreshTokenHash;
+            return transformed;
         },
     },
 
@@ -197,32 +197,6 @@ userSchema.index({
         lastName: 5,
     },
     name: 'user_text_search',
-});
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// PRE-SAVE MIDDLEWARE
-// ═══════════════════════════════════════════════════════════════════════════════
-
-/**
- * Hash password before saving
- * Only runs if password field is modified (not on every save)
- */
-userSchema.pre('save', async function (next) {
-    // Only hash if password was modified
-    if (!this.isModified('passwordHash')) {
-        return next();
-    }
-
-    try {
-        // BCRYPT CONFIGURATION:
-        // Salt rounds = 12 (good balance of security vs speed)
-        // Higher = more secure but slower
-        const SALT_ROUNDS = 12;
-        this.passwordHash = await bcrypt.hash(this.passwordHash, SALT_ROUNDS);
-        next();
-    } catch (error) {
-        next(error as Error);
-    }
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════

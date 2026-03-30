@@ -139,7 +139,7 @@ export class AuthService {
 
         // Refresh token (long-lived, stored in HttpOnly cookie)
         const refreshToken = this.fastify.jwt.sign(
-            { id: user._id.toString(), type: 'refresh' },
+            { id: user._id.toString(), type: 'refresh' } as unknown as import('../../plugins/auth.js').JwtPayload,
             { expiresIn: env.JWT_REFRESH_EXPIRY }
         );
 
@@ -222,7 +222,7 @@ export class AuthService {
         });
 
         const newRefreshToken = this.fastify.jwt.sign(
-            { id: user._id.toString(), type: 'refresh' },
+            { id: user._id.toString(), type: 'refresh' } as unknown as import('../../plugins/auth.js').JwtPayload,
             { expiresIn: env.JWT_REFRESH_EXPIRY }
         );
 

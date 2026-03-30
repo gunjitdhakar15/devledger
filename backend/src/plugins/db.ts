@@ -84,7 +84,7 @@ async function dbPlugin(fastify: FastifyInstance) {
         });
 
     } catch (error) {
-        fastify.log.error('❌ MongoDB connection failed:', error);
+        fastify.log.error({ err: error }, '❌ MongoDB connection failed');
         throw error;  // Re-throw to prevent server from starting
     }
 }

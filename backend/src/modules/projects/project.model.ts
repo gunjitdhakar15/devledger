@@ -104,11 +104,12 @@ const projectSchema = new Schema<IProjectDocument, IProjectModel>({
     toJSON: {
         virtuals: true,
         transform: (_doc, ret) => {
-            ret.id = ret._id.toString();
-            ret.ownerId = ret.owner?.toString();
-            delete ret._id;
-            delete ret.__v;
-            return ret;
+            const transformed = ret as unknown as Record<string, unknown>;
+            transformed.id = String(transformed._id);
+            transformed.ownerId = String(transformed.owner);
+            delete transformed._id;
+            delete transformed.__v;
+            return transformed;
         },
     },
 
