@@ -30,7 +30,6 @@
 
 import fp from 'fastify-plugin';
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import { diff } from 'deep-diff';
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -156,6 +155,12 @@ auditLogSchema.index({ actor: 1, timestamp: -1 });
 
 let AuditLogModel: Model<AuditLogDocument>;
 
+interface AuditDiffEntry {
+    path: string;
+    before: unknown;
+    after: unknown;
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // UTILITY FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -188,6 +193,69 @@ function getClientIp(request: FastifyRequest): string {
         return forwarded.split(',')[0].trim();
     }
     return request.ip || 'unknown';
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function buildDiffEntries(
+    before: Record<string, unknown>,
+    after: Record<string, unknown>,
+    currentPath: string[] = []
+): AuditDiffEntry[] {
+    const keys = new Set([
+        ...Object.keys(before),
+        ...Object.keys(after),
+    ]);
+
+    const changes: AuditDiffEntry[] = [];
+
+    for (const key of keys) {
+        const nextPath = [...currentPath, key];
+        const left = before[key];
+        const right = after[key];
+
+        if (isPlainObject(left) && isPlainObject(right)) {
+            changes.push(...buildDiffEntries(left, right, nextPath));
+            continue;
+        }
+
+        if (Array.isArray(left) && Array.isArray(right)) {
+            if (JSON.stringify(left) !== JSON.stringify(right)) {
+                changes.push({
+                    path: nextPath.join('.'),
+                    before: left,
+                    after: right,
+                });
+            }
+            continue;
+        }
+
+        if (left instanceof Date || right instanceof Date) {
+            const leftValue = left instanceof Date ? left.toISOString() : left;
+            const rightValue = right instanceof Date ? right.toISOString() : right;
+
+            if (leftValue !== rightValue) {
+                changes.push({
+                    path: nextPath.join('.'),
+                    before: leftValue,
+                    after: rightValue,
+                });
+            }
+            continue;
+        }
+
+        if (left !== right) {
+            changes.push({
+                path: nextPath.join('.'),
+                before: left,
+                after: right,
+            });
+        }
+    }
+
+    return changes;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -251,7 +319,7 @@ async function auditPlugin(fastify: FastifyInstance) {
         // ─────────────────────────────────────────────────────────────────────────
         let changes: unknown[] = [];
         if (action === 'UPDATE' && oldValue && newValue) {
-            changes = diff(oldValue, newValue) || [];
+            changes = buildDiffEntries(oldValue, newValue);
         }
 
         // ─────────────────────────────────────────────────────────────────────────
