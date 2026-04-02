@@ -82,7 +82,7 @@ Web Service
 ### Repository settings
 
 - Root Directory: `backend`
-- Build Command: `npm install && npm run build`
+- Build Command: `npm ci --omit=dev && npm run build`
 - Start Command: `npm start`
 - Node Version: `22`
 
@@ -106,8 +106,21 @@ FRONTEND_URL=https://<your-cloudflare-pages-domain>
 - The backend currently runs via `tsx src/server.ts` in production.
 - This is okay for the current MVP and unblocks deployment now.
 - Do not use Node 25 on Render for this project. Pin the service to Node 22.
+- Prefer `npm ci` over `npm install` on Render so the lockfile is used exactly and stale package cache issues are less likely.
 - Render Free spins down on idle, so the first request after inactivity will be slow.
 - Render Free blocks outbound SMTP ports, so email automation should not be part of this free deployment plan.
+
+### If Render fails with `Cannot find module` inside `node_modules`
+
+This usually points to a bad cached install on Render, not a broken repository state.
+
+Do this in order:
+
+1. Confirm the service branch is `feature/v1` until the work is merged to `main`.
+2. Confirm Node Version is explicitly `22`.
+3. Change the build command to `npm ci --omit=dev && npm run build`.
+4. Use Render's `Clear build cache & deploy` option.
+5. After deploy, test `GET /health` before trying login.
 
 ### Checklist
 
