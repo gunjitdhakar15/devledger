@@ -21,11 +21,13 @@ import { env } from './config/env.js';
 
 // MAIN FUNCTION "async because we have to wait for DB to connect"
 async function main(): Promise<void> {
-    // BUILD THE APPLICATION (Promise<void> -> typescript syntax for promise that this function will return nothing and will be complete eventually)
-    // 1.bulid the app ( Plugins, routes, etc)
-    const app = await buildApp();
-    
+    let app;
+
     try {
+        // BUILD THE APPLICATION (Promise<void> -> typescript syntax for promise that this function will return nothing and will be complete eventually)
+        // 1.bulid the app ( Plugins, routes, etc)
+        app = await buildApp();
+
         // 2.Start listening for request on the PORT from env
         await app.listen({
             port: env.PORT,
@@ -53,7 +55,10 @@ async function main(): Promise<void> {
     `);
 
     } catch (err) {
-        app.log.error(err);
+        if (app) {
+            app.log.error(err, 'Server failed to start');
+        }
+        console.error('Server failed to start:', err);
         process.exit(1);
     }
 
