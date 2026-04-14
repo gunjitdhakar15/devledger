@@ -163,9 +163,10 @@ devledger/
 
 ## 🚢 Free Deployment Path
 
-- **Frontend**: Deploy `frontend/dist` to a static host such as Cloudflare Pages
-- **Backend**: Deploy the `backend` folder to a Node host and run `npm install && npm run build` as the build command, then `npm start`
+- **Frontend**: Deploy the `frontend` folder to Vercel with `npm run build`, output directory `dist`, and `VITE_API_URL=https://devledger.onrender.com/api/v1`
+- **Backend**: Deploy the `backend` folder to Render and run `npm ci --omit=dev && npm run build` as the build command, then `npm start`
 - **Database**: Use MongoDB Atlas free tier and set `MONGODB_URI`, `JWT_SECRET`, and `FRONTEND_URL` in your backend environment
+- **CORS**: After Vercel deploys, set Render's `FRONTEND_URL` to the exact Vercel app URL and redeploy the backend
 
 ## 📝 License
 

@@ -16,7 +16,7 @@ This guide covers:
 
 ## Recommended Free Stack
 
-- Frontend: Cloudflare Pages
+- Frontend: Vercel
 - Backend: Render Web Service
 - Database: MongoDB Atlas free tier
 
@@ -35,7 +35,7 @@ devledger/
 
 ```mermaid
 flowchart TD
-    Dev["GitHub Repository"] --> FE["Cloudflare Pages"]
+    Dev["GitHub Repository"] --> FE["Vercel"]
     Dev --> BE["Render Web Service"]
     BE --> DB["MongoDB Atlas"]
     FE -->|HTTPS API calls| BE
@@ -49,7 +49,7 @@ flowchart TD
 - MongoDB Atlas account or local MongoDB
 - GitHub repo access
 - Render account
-- Cloudflare account
+- Vercel account
 
 ## Environment Variables
 
@@ -173,7 +173,7 @@ npm run db:seed
 ### Render Service Settings
 
 - Root directory: `backend`
-- Build command: `npm install && npm run build`
+- Build command: `npm ci --omit=dev && npm run build`
 - Start command: `npm start`
 
 ### Backend Runtime Notes
@@ -209,20 +209,23 @@ After deployment:
 
 ## Frontend Deployment Runbook
 
-### Cloudflare Pages Settings
+### Vercel Settings
 
 - Root directory: `frontend`
-- Build command: `npm install && npm run build`
+- Framework preset: `Vite`
+- Build command: `npm run build`
 - Build output directory: `dist`
 
 ### Frontend Deployment Steps
 
-1. Create a new Cloudflare Pages project.
+1. Create a new Vercel project.
 2. Connect the GitHub repository.
 3. Set the root directory to `frontend`.
-4. Add `VITE_API_URL` as a Pages environment variable.
+4. Add `VITE_API_URL` as a Vercel environment variable.
 5. Trigger the build.
 6. Open the deployed site and confirm the login screen loads.
+7. Copy the Vercel deployment URL.
+8. Set Render's `FRONTEND_URL` to the exact Vercel URL and redeploy the backend.
 
 ## Deployment Sequence
 
@@ -260,7 +263,7 @@ sequenceDiagram
 If a deployment is unhealthy:
 
 1. Keep the database unchanged unless there is a proven migration issue.
-2. Roll the frontend back to the previous successful Pages deployment.
+2. Roll the frontend back to the previous successful Vercel deployment.
 3. Roll the backend back to the previous Render deployment.
 4. Re-run smoke tests.
 5. Inspect:
@@ -294,7 +297,7 @@ This usually means the frontend is healthy and the backend or environment config
 ## Release Checklist
 
 - frontend `npm run build`
-- backend `npm install`
+- backend `npm ci --omit=dev`
 - backend `npm run build`
 - backend env vars configured
 - frontend env vars configured

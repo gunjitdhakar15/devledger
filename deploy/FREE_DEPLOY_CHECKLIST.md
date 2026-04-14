@@ -8,13 +8,13 @@ This file is the shortest path from the current repository state to a working fr
 
 Deploy DevLedger using only free services:
 
-- Frontend: Cloudflare Pages
+- Frontend: Vercel
 - Backend: Render Free Web Service
 - Database: MongoDB Atlas M0
 
 ## Why This Stack
 
-- Cloudflare Pages works well for the Vite frontend and expects `npm run build` with a `dist` output directory.
+- Vercel works well for the Vite frontend and expects `npm run build` with a `dist` output directory.
 - Render Free Web Services can host the backend, but they spin down after 15 minutes of inactivity and can take about one minute to wake up.
 - MongoDB Atlas M0 is still free and sufficient for a portfolio MVP.
 
@@ -32,7 +32,7 @@ Deploy DevLedger using only free services:
 
 - MongoDB Atlas cluster creation
 - Render service creation
-- Cloudflare Pages project creation
+- Vercel project creation
 - production environment variables
 
 ## Deployment Flow
@@ -42,7 +42,7 @@ flowchart TD
     A["Create MongoDB Atlas M0 cluster"] --> B["Deploy backend on Render"]
     B --> C["Set backend env vars"]
     C --> D["Verify /health and login"]
-    D --> E["Deploy frontend on Cloudflare Pages"]
+    D --> E["Deploy frontend on Vercel"]
     E --> F["Set VITE_API_URL"]
     F --> G["Run smoke test"]
 ```
@@ -98,7 +98,7 @@ MONGODB_URI=<your-atlas-uri>
 JWT_SECRET=<random-secret-at-least-32-characters>
 JWT_ACCESS_EXPIRY=15m
 JWT_REFRESH_EXPIRY=7d
-FRONTEND_URL=https://<your-cloudflare-pages-domain>
+FRONTEND_URL=https://<your-vercel-domain>
 ```
 
 ### Notes
@@ -166,12 +166,13 @@ sequenceDiagram
 - [ ] login works
 - [ ] at least one protected route works
 
-## Step 4: Deploy Frontend on Cloudflare Pages
+## Step 4: Deploy Frontend on Vercel
 
 ### Project settings
 
 - Root Directory: `frontend`
-- Build Command: `npm install && npm run build`
+- Framework Preset: `Vite`
+- Build Command: `npm run build`
 - Build Output Directory: `dist`
 
 ### Frontend environment variables
@@ -184,16 +185,18 @@ VITE_API_URL=https://<your-render-backend-domain>/api/v1
 
 - The frontend uses hash routing, so static hosting is simple.
 - Demo mode remains available even if the backend is sleeping.
+- After Vercel gives you the live frontend URL, update Render's `FRONTEND_URL` to that exact Vercel URL and redeploy the backend so CORS allows the frontend.
 
 ### Checklist
 
-- [ ] Cloudflare account created
-- [ ] Pages project created
+- [ ] Vercel account connected
+- [ ] Vercel project created
 - [ ] root directory set to `frontend`
 - [ ] build command entered
 - [ ] output directory set to `dist`
 - [ ] `VITE_API_URL` added
 - [ ] frontend deploy passed
+- [ ] Render `FRONTEND_URL` updated to the Vercel URL
 
 ## Step 5: Final End-to-End Test
 
@@ -250,16 +253,17 @@ Follow this exact order:
 2. Create Render backend service
 3. Verify `/health`
 4. Seed database if needed
-5. Create Cloudflare Pages frontend
+5. Create Vercel frontend
 6. Set `VITE_API_URL`
-7. Test live login
+7. Update Render `FRONTEND_URL`
+8. Test live login
 
 ## What To Send Back To Me
 
 If you want me to keep guiding you live, send me:
 
 - your Render service URL
-- your Cloudflare Pages URL
+- your Vercel URL
 - whether Atlas is created
 - any error text from `/health` or login
 

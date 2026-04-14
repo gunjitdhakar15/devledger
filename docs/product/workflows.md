@@ -142,7 +142,7 @@ sequenceDiagram
 flowchart TD
     A["Push changes to GitHub"] --> B["Deploy backend to Render"]
     B --> C["Verify /health and auth"]
-    C --> D["Deploy frontend to Cloudflare Pages"]
+    C --> D["Deploy frontend to Vercel"]
     D --> E["Set VITE_API_URL"]
     E --> F["Run smoke tests"]
     F --> G["Release ready"]
