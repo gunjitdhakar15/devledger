@@ -7,7 +7,7 @@
     "scripts": {
         "dev": "tsx watch src/server.ts",
         "build": "node -e \"console.log('DevLedger backend runs directly with tsx in production builds.')\"",
-        "start": "tsx src/server.ts",
+        "start": "tsx src/bootstrap.ts",
         "lint": "eslint src --ext .ts",
         "typecheck": "tsc --noEmit",
         "test": "vitest run",
