@@ -20,7 +20,7 @@ import { buildApp } from './app.js';
 import { env } from './config/env.js';
 
 // MAIN FUNCTION "async because we have to wait for DB to connect"
-async function main(): Promise<void> {
+export async function main(): Promise<void> {
     let app;
 
     try {
@@ -116,5 +116,3 @@ async function main(): Promise<void> {
     });
 }
 
-// Run the Server
-main();

@@ -30,9 +30,16 @@ process.on('unhandledRejection', (reason) => {
     process.exit(1);
 });
 
-logEnvironmentPresence();
+async function boot() {
+    logEnvironmentPresence();
 
-import('./server.js').catch((error) => {
-    console.error('Failed to import server entrypoint:', error);
-    process.exit(1);
-});
+    try {
+        const { main } = await import('./server.js');
+        await main();
+    } catch (error) {
+        console.error('Failed to boot DevLedger backend:', error);
+        process.exit(1);
+    }
+}
+
+boot();
